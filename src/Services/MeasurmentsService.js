@@ -8,8 +8,6 @@ class Measurement {
     }
 }
 
-measurementType
-
 class measurementType {
     constructor(name, date, value, userId, measurementType) {
         this.name = name;
@@ -20,6 +18,14 @@ class measurementType {
     }
 }
 
+class measurementAssociationt {
+    constructor(userId, measurementId, howManyTimesADay) {
+        this.userId = userId;
+        this.measurementId = measurementId;
+        this.howManyTimesADay = howManyTimesADay;
+        
+    }
+}
 
 class MeasurementsService {
     constructor(db) {
@@ -104,9 +110,7 @@ class MeasurementsService {
     }
 
     async getMeasurement(id, token) {
-
         const measurement = this.db.Measurement.findByPk(id);
-
         try {
             const expectedUserId = measurement.userId
             const decodedToken = jwtService.verifyToken(token, expectedUserId);
@@ -124,10 +128,52 @@ class MeasurementsService {
         return { measurement, measurementType };
     }
 
+    async getTodayMeasurements(userId, token) {
+        try {
+            const decodedToken = jwtService.verifyToken(token, userId);
+            console.log(decodedToken);
+        } catch (error) {
+            console.error(error.message);
+        }
 
+        const measurement = this.db.Measurement.findAll({
+            where: {
+                userId: { [this.db.Op.eq]: userId },
+                date: { [this.db.Op.gte]: new Date(new Date().setHours(0,0,0,0)), [this.db.Op.lt]: new Date(new Date().setHours(23,59,59,999)) }
+            }
+        });
 
+        results = []
+        measurement.forEach(async m => {
+            const measurementType = await this.db.MeasurementType.findOne({
+                where: {
+                    name: { [this.db.Op.eq]: m.measurementType }
+                }
+            });
+            results.push({measurement, measurementType});
+            
+        });
 
+        return results;
+    }
+
+    async getAllUserMeasurements(userId, token) {
+        try {
+            const decodedToken = jwtService.verifyToken(token, userId);
+            console.log(decodedToken);
+        } catch (error) {
+            console.error(error.message);
+        }
+
+        const association = this.db.measurementAssociationt.findAll({
+            where: {
+                userId: { [this.db.Op.eq]: userId }
+            }
+        });
+
+        return association;
+    }
 }
 
-
+export default MeasurementsService;
 

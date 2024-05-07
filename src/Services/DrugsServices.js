@@ -1,9 +1,9 @@
 
 // Function to update a drug
-const { Op } = require('sequelize');
-const jwt = require('jsonwebtoken');
+import { Op } from 'sequelize';
+import jwt from 'jsonwebtoken';
+import JWTService from './JwtService';
 
-const JWTService = require('./JwtService');
 const jwtService = new JWTService('100pa');
 
 class DrugsService {
@@ -133,11 +133,4 @@ class DrugsService {
 }
 
 
-module.exports = DrugsService;
-module.exports = {
-    getDrug,
-    addDrug,
-    updateDrug,
-    deleteDrug,
-    getAllDrugs
-};
+export default DrugsService;

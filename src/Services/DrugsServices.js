@@ -12,7 +12,7 @@ class DrugsService {
         this.db = db;
     }
 
-    async addDrug(drug) {
+    async addDrug(drug, token) {
         if (!drug.name || !drug.timeOfDay || !drug.dosage || !drug.notificationPriority || !drug.notes || !drug.userId) {
             return {
                 error: 'All fields are required'
@@ -41,30 +41,32 @@ class DrugsService {
      */
     async updateDrug(drugId, updatedInfo, token) {
 
+        const drug = await this.db.Drug.findByPk(drugId);
+        if (!drug) {
+            return {
+                error: 'Drug not found'
+            };
+        }
+
         try {
-            const expectedUserId = drugId.userId
+            const expectedUserId = drug.userId
             const decodedToken = jwtService.verifyToken(token, expectedUserId);
             console.log(decodedToken);
         } catch (error) {
             console.error(error.message);
         }
-        
-        const drug = await this.db.Drug.update({
-            name: updatedInfo.name,
-            timeOfDay: updatedInfo.timeOfDay,
-            dosage: updatedInfo.dosage,
-            notificationPriority: updatedInfo.notificationPriority,
-            notes: updatedInfo.notes
-        }, {
+
+        return this.db.Drug.update(updatedInfo, {
             where: {
-                id: { [this.db.Op.eq]: drugId }
+                id: { [this.db.Op.eq]: id }
             }
         });
     }
 
     async deleteDrug(drugId, token) {
+        const drug = this.db.Drug.findByPk(id);
         try {
-            const expectedUserId = drugId.userId
+            const expectedUserId = drug.userId
             const decodedToken = jwtService.verifyToken(token, expectedUserId);
             console.log(decodedToken);
         } catch (error) {
@@ -80,8 +82,10 @@ class DrugsService {
 
 
     async getDrug(id, token) {
+
+        const drug = this.db.Drug.findByPk(id);
         try {
-            const expectedUserId = drugId.userId
+            const expectedUserId = drug.userId
             const decodedToken = jwtService.verifyToken(token, expectedUserId);
             console.log(decodedToken);
         } catch (error) {
@@ -110,9 +114,9 @@ class DrugsService {
 
     async getAllDrugs(userId, token) {
         // Add logic to retrieve all drugs associated with a user
+
         try {
-            const expectedUserId = drugId.userId
-            const decodedToken = jwtService.verifyToken(token, expectedUserId);
+            const decodedToken = jwtService.verifyToken(token, userId);
             console.log(decodedToken);
         } catch (error) {
             console.error(error.message);

@@ -1,0 +1,22 @@
+.menu {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #333;
+    transition: 0.3s;
+  }
+  
+  .menu.open {
+    left: 0;
+  }
+  
+  .open-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1;
+  }

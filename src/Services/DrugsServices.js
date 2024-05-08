@@ -5,6 +5,8 @@ import Drug from '../database/models/Drug';
 import User from '../database/models/User';
 import DrugPrescription from "../database/models/DrugPrescription";
 import DrugTake from "../database/models/DrugTake";
+import 'react-app-polyfill/ie9';
+import 'react-app-polyfill/ie11';
 
 const jwtService = new JWTService('100pa');
 

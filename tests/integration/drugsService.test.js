@@ -1,7 +1,7 @@
-import DrugsServices from "../../src/Services/DrugsServices";
-import jWTService from "../../src/Services/JwtService";
-import sequelize from "../../src/database/sequelize";
-import {User, DrugPrescription} from "../../src/database/models";
+import DrugsServices from "../../server/Services/DrugsServices";
+import jWTService from "../../server/Services/JwtService";
+import sequelize from "../../server/database/sequelize";
+import {User, DrugPrescription} from "../../server/database/models";
 
 let userId;
 let doctorId;
@@ -23,7 +23,7 @@ describe("DrugsServices", () => {
   it("should add a new drug prescription as a doctor", async () => {
     const drug = {
       name: "Paracetamol",
-      takeHour: 8,
+      takeHours: {"hours":[8,16]},
       frequency: "1-0-1",
       dose: 500,
       notes: "Take with water",
@@ -51,17 +51,29 @@ describe("DrugsServices", () => {
     const drug = {
       name: "Paracetamol",
       frequency: "1-0-1",
-      takeHour: 10,
+      takeHours: {"hours": [10,14]},
       dose: 500,
       notes: "Take with water",
       userId: doctorId
     };
+
+    const drug2 = {
+      name: "Ibuprofen",
+      frequency: "2-0-1",
+      takeHours: {"hours":[8,16]},
+      dose: 800,
+      notes: "Take with fat",
+      userId: doctorId
+    };
+
     const JWTService = new jWTService("100pa");
     const token = JWTService.generateToken(doctorId);
     const drugsServices = new DrugsServices();
     const response = await drugsServices.addDrugPrescription(drug, token);
-    console.log('userId', userId)
+    const response2 = await drugsServices.addDrugPrescription(drug2, token);
+
     expect(response.error).toBeUndefined();
+    expect(response2.error).toBeUndefined();
 
     const drugPrescription = await DrugPrescription.findAll({
       where: {
@@ -71,6 +83,7 @@ describe("DrugsServices", () => {
       raw: true
     });
 
+    console.log( await drugsServices.getClosestPrescription(token))
     expect(drugPrescription).not.toBeNull();
   });
   it("should get user prescriptions, take a drug and then see it in the history", async () => {

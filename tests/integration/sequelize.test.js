@@ -1,6 +1,12 @@
 import {describe, it, expect} from "vitest";
-import sequelize from "../../src/database/sequelize";
-import {Drug} from "../../src/database/models";
+const sequelize = require('../../server/database/sequelize');
+const {Drug} = require('../../server/database/models');
+const User = require('../../server/database/models');
+const DrugPrescription = require('../../server/database/models');
+const DrugTake = require('../../server/database/models');
+const Measurement = require('../../server/database/models');
+const MeasurementPrescription = require('../../server/database/models');
+const MeasurementTake = require('../../server/database/models');
 
 
 describe('Sequelize', () => {

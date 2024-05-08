@@ -17,9 +17,9 @@ class DrugsService {
 
   }
   async addDrugPrescription(drug, token) {
-    if (validator(drug, ['name', 'frequency', 'dose', 'notes']).length > 0) {
+    if (validator(drug, ['name', 'frequency', 'dosage']).length > 0) {
       return {
-        error: `missing required fields: ${validator(drug, ['name', 'frequency', 'dosage', 'notes']).join(', ')}`
+        error: `missing required fields: ${validator(drug, ['name', 'frequency', 'dosage']).join(', ')}`
       }
     }
 

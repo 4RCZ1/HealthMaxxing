@@ -47,6 +47,21 @@ input{
   background:transparent;
 }
 
+label {
+  font-size: 1.2rem;
+}
+
+button {
+  padding: 0.8rem 2rem;
+  border-radius: 31px;
+  border: 1px solid #BDC5E1;
+  margin: 0.5rem 0;
+  background: #445389;
+  color: #BDC5E1;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
   monospace;

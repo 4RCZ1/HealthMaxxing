@@ -23,6 +23,7 @@ describe("DrugsServices", () => {
   it("should add a new drug prescription as a doctor", async () => {
     const drug = {
       name: "Paracetamol",
+      takeHour: 8,
       frequency: "1-0-1",
       dose: 500,
       notes: "Take with water",
@@ -50,6 +51,7 @@ describe("DrugsServices", () => {
     const drug = {
       name: "Paracetamol",
       frequency: "1-0-1",
+      takeHour: 10,
       dose: 500,
       notes: "Take with water",
       userId: doctorId

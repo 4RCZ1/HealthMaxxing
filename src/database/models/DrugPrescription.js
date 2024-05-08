@@ -30,6 +30,10 @@ DrugPrescription.init({
       key: 'id'
     }
   },
+  takeHour: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   frequency: {
     type: DataTypes.STRING,
     allowNull: false

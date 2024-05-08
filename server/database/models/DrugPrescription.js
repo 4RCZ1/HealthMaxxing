@@ -33,10 +33,6 @@ DrugPrescription.init({
   takeHours: {
     type: DataTypes.JSON,
     allowNull: false
-  },
-  frequency: {
-    type: DataTypes.STRING,
-    allowNull: false
   }
 }, {
   sequelize,

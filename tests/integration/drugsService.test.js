@@ -25,7 +25,7 @@ describe("DrugsServices", () => {
       name: "Paracetamol",
       takeHours: {"hours":[8,16]},
       frequency: "1-0-1",
-      dose: 500,
+      dosage: 500,
       notes: "Take with water",
       userId: userId
     };
@@ -50,19 +50,15 @@ describe("DrugsServices", () => {
   it("should add a new drug prescription to a drug that already exists", async () => {
     const drug = {
       name: "Paracetamol",
-      frequency: "1-0-1",
       takeHours: {"hours": [10,14]},
-      dose: 500,
-      notes: "Take with water",
+      dosage: 500,
       userId: doctorId
     };
 
     const drug2 = {
       name: "Ibuprofen",
-      frequency: "2-0-1",
       takeHours: {"hours":[8,16]},
-      dose: 800,
-      notes: "Take with fat",
+      dosage: 800,
       userId: doctorId
     };
 

@@ -17,26 +17,31 @@ class DrugsService {
 
   }
   async addDrugPrescription(drug, token) {
-    if (validator(drug, ['name', 'frequency', 'dosage']).length > 0) {
+    if (validator(drug, ['name', 'takeHours', 'dosage']).length > 0) {
       return {
-        error: `missing required fields: ${validator(drug, ['name', 'frequency', 'dosage']).join(', ')}`
+        error: `missing required fields: ${validator(drug, ['name', 'takeHours', 'dosage']).join(', ')}`
       }
     }
 
     let drugId = (await Drug.findAll({
       where: {
-        name: drug.name
+        name: drug.name,
+        dose: drug.dosage
       },
       attributes: ['id']
     }))[0]?.id;
 
     if (!drugId) {
-      if (validator(drug, ['dose']).length > 0) {
+      if (validator(drug, ['dosage']).length > 0) {
         return {
-          error: `missing required fields: ${validator(drug, ['dose']).join(', ')}`
+          error: `missing required fields: ${validator(drug, ['dosage']).join(', ')}`
         }
       }
-      await Drug.create(drug);
+      await Drug.create({
+        name: drug.name,
+        dose: drug.dosage,
+        takeHours: drug.takeHours
+      });
       drugId = (await Drug.findAll({
         where: {
           name: drug.name
@@ -59,7 +64,6 @@ class DrugsService {
       userId: drug.userId || userId,
       drugId: drugId,
       prescriptorId: drug.prescriptorId,
-      frequency: drug.frequency,
       takeHours: drug.takeHours
     });
     return {drugId};

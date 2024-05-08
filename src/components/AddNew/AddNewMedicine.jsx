@@ -1,3 +1,5 @@
+import BackButton from "../BackButton";
+
 const AddNewMedicine = () => {
   const sugmitAddMedicine = () => {
     const name = document.getElementById("name").value;
@@ -28,7 +30,7 @@ const AddNewMedicine = () => {
   }
   return (
     <>
-      <p style={{marginBottom: "3rem"}} className="header">Dodaj lek ręcznie</p>
+      <div style={{marginBottom: "3rem"}} className="header f-row"><BackButton/> Dodaj lek ręcznie</div>
       <div className="f-col" style={{justifyContent: "space-between", flexGrow:1, marginBottom:"80px"}}>
         <div className="f-col">
           <div className="f-col">

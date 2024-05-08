@@ -27,7 +27,10 @@ const Navbar = () => {
       backgroundColor: "black",
       display: "flex"
     }}>
-      {routes.map((route, index) => (
+      {routes.map((route, index) => {
+        console.log(route.path, location.pathname)
+        const isActive = (location.pathname.includes(route.path) && route.path !== "/") || location.pathname === route.path
+        return (
         <div key={index} style={{
           width: "16.666666666666667%",
           height: "100%",
@@ -35,16 +38,16 @@ const Navbar = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: location.pathname === route.path ? activeBackgroundColor : standardBackgroundColor
+          backgroundColor: isActive ? activeBackgroundColor : standardBackgroundColor
         }} onClick={() => navigate(route.path)}>
           <img src={route.img} alt={route.path.replace('/','')}
                style={{
-                 filter: `brightness(0) saturate(100%) ${location.pathname !== route.path ? activeFilters : standardFilters}`,
+                 filter: `brightness(0) saturate(100%) ${!isActive ? activeFilters : standardFilters}`,
 
           }}
           />
         </div>
-      ))}
+      )})}
     </div>
   )
 }

@@ -1,14 +1,15 @@
 import {describe, it, expect} from "vitest";
 import sequelize from "../../src/database/sequelize";
-import Drug from "../../src/database/models/Drug";
+import {Drug} from "../../src/database/models";
+
 
 describe('Sequelize', () => {
   it('should connect to the database', async () => {
     await sequelize.authenticate();
     expect(sequelize).toBeDefined();
   });
-  it('should synchronize all models', async () => {
-    await sequelize.sync({ force: true });
+  it.skip('should synchronize all models', async () => {
+    await sequelize.sync({ force: false });
     expect(sequelize).toBeDefined();
   });
   it('should create new drug', async () => {

@@ -26,7 +26,6 @@ class DrugsService {
       },
       attributes: ['id']
     }))[0]?.id;
-    console.log('drugId', drugId)
 
     if (!drugId) {
       if (validator(drug, ['dose']).length > 0) {
@@ -131,7 +130,6 @@ class DrugsService {
     try {
       const expectedUserId = drug.userId
       const decodedToken = jwtService.verifyToken(token, expectedUserId);
-      console.log(decodedToken);
     } catch (error) {
       console.error(error.message);
     }
@@ -160,7 +158,6 @@ class DrugsService {
 
     try {
       const decodedToken = jwtService.verifyToken(token, userId);
-      console.log(decodedToken);
     } catch (error) {
       console.error(error.message);
     }

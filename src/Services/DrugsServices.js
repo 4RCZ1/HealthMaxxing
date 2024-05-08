@@ -1,134 +1,169 @@
-
-// Function to update a drug
-import { Op } from 'sequelize';
-import jwt from 'jsonwebtoken';
+import sequelize from '../database/sequelize';
+import {Sequelize} from "sequelize";
 import JWTService from './JwtService';
+import Drug from '../database/models/Drug';
+import User from '../database/models/User';
+import DrugPrescription from "../database/models/DrugPrescription";
+import DrugTake from "../database/models/DrugTake";
 
 const jwtService = new JWTService('100pa');
 
+const validator = (target, requiredProperties) => {
+  return requiredProperties.filter(property => !target[property]);
+}
+
 class DrugsService {
-
-    constructor(db) {
-        this.db = db;
+  async addDrugPrescription(drug, token) {
+    if (validator(drug, ['name', 'frequency', 'dose', 'notes']).length > 0) {
+      return {
+        error: `missing required fields: ${validator(drug, ['name', 'frequency', 'dosage', 'notes']).join(', ')}`
+      }
     }
 
-    async addDrug(drug, token) {
-        if (!drug.name || !drug.timeOfDay || !drug.dosage || !drug.notificationPriority || !drug.notes || !drug.userId) {
-            return {
-                error: 'All fields are required'
-            };
+    let drugId = (await Drug.findAll({
+      where: {
+        name: drug.name
+      },
+      attributes: ['id']
+    }))[0]?.id;
+
+    if (!drugId) {
+      if (validator(drug, ['dose']).length > 0) {
+        return {
+          error: `missing required fields: ${validator(drug, ['dose']).join(', ')}`
         }
-
-        return this.db.Drug.create(drug)
-            .catch(error => {
-                return {
-                    error: error.parent.detail
-                };
-            });
-
+      }
+      await Drug.create(drug);
+      drugId = (await Drug.findAll({
+        where: {
+          name: drug.name
+        },
+        attributes: ['id']
+      }))[0]?.id;
     }
 
-    /**
-     * Updates a drug in the database
-     * @param {number} drugId The id of the drug to update
-     * @param {Object} updatedInfo The updated information for the drug
-     * @param {string} updatedInfo.name The updated name of the drug
-     * @param {string} updatedInfo.timeOfDay The updated time of day to take the drug
-     * @param {number} updatedInfo.dosage The updated dosage of the drug
-     * @param {number} updatedInfo.notificationPriority The updated notification priority for the drug
-     * @param {string} updatedInfo.notes The updated notes for the drug
-     * @returns {Promise<Object>} The updated drug
-     */
-    async updateDrug(drugId, updatedInfo, token) {
-
-        const drug = await this.db.Drug.findByPk(drugId);
-        if (!drug) {
-            return {
-                error: 'Drug not found'
-            };
+    const userId = jwtService.getUserId(token);
+    if (drug.userId && drug.userId !== userId) {
+      if (drug.prescriptorId && drug.prescriptorId !== userId) {
+        return {
+          error: 'Not authorized'
         }
+      }
+      drug.prescriptorId = userId;
+    }
 
-        try {
-            const expectedUserId = drug.userId
-            const decodedToken = jwtService.verifyToken(token, expectedUserId);
-            console.log(decodedToken);
-        } catch (error) {
-            console.error(error.message);
-        }
+    await DrugPrescription.create({
+      userId: drug.userId || userId,
+      drugId: drugId,
+      prescriptorId: drug.prescriptorId,
+      frequency: drug.frequency
+    });
+    return {drugId};
+  }
 
-        return this.db.Drug.update(updatedInfo, {
-            where: {
-                id: { [this.db.Op.eq]: id }
+  async takeDrug(prescriptionId, token) {
+    const userId = jwtService.getUserId(token);
+    const drugPrescription = await DrugPrescription.findByPk(prescriptionId);
+    if (!drugPrescription) {
+      return {
+        error: 'Prescription not found'
+      };
+    }
+
+    if (userId !== drugPrescription.userId) {
+      return {
+        error: 'Not authorized'
+      };
+    }
+
+    return DrugTake.create({
+      drugPrescriptionId: prescriptionId,
+      userId: userId,
+      timeTaken: new Date()
+    });
+  }
+
+  async getDrugTakeHistory(token) {
+    const userId = jwtService.getUserId(token);
+    return DrugTake.findAll({
+      where: {
+        userId: userId
+      },
+      include: [
+        {
+          model: DrugPrescription,
+          as: 'DrugPrescription',
+          include: [
+            {
+              model: Drug,
+              as: 'Drug'
             }
-        });
-    }
-
-    async deleteDrug(drugId, token) {
-        const drug = this.db.Drug.findByPk(id);
-        try {
-            const expectedUserId = drug.userId
-            const decodedToken = jwtService.verifyToken(token, expectedUserId);
-            console.log(decodedToken);
-        } catch (error) {
-            console.error(error.message);
+          ]
         }
+      ],
+    });
+  }
 
-        return this.db.Drug.destroy({
-            where: {
-                id: { [this.db.Op.eq]: drugId }
-            }
-        });
-    }
-
-
-    async getDrug(id, token) {
-
-        const drug = this.db.Drug.findByPk(id);
-        try {
-            const expectedUserId = drug.userId
-            const decodedToken = jwtService.verifyToken(token, expectedUserId);
-            console.log(decodedToken);
-        } catch (error) {
-            console.error(error.message);
+  async getUserPrescriptions(token) {
+    const userId = jwtService.getUserId(token);
+    return DrugPrescription.findAll({
+      where: {
+        userId: userId
+      },
+      include: [
+        {
+          model: Drug,
+          as: 'Drug',
+        },
+        {
+          model: User,
+          as: 'Prescriptor'
         }
+      ],
+      raw: true
+    });
+  }
 
-        return this.db.Drug.findByPk(id, {
-            include: [
-                {
-                    model: this.db.User,
-                    where: {
-                        id: { [this.db.Op.eq]: this.db.sequelize.col('drugs.userId') },
-                        authToken: { [this.db.Op.eq]: process.env.AUTH_TOKEN }
-                    }
-                }
-            ]
-        }).then(drug => {
-            if (!drug) {
-                return { error: 'Not authorized' };
-            }
-            return this.db.Drug.findByPk(id);
-        });
+  async getDrug(id, token) {
 
+    const drug = this.db.Drug.findByPk(id);
+    try {
+      const expectedUserId = drug.userId
+      const decodedToken = jwtService.verifyToken(token, expectedUserId);
+    } catch (error) {
+      console.error(error.message);
     }
 
-
-    async getAllDrugs(userId, token) {
-        // Add logic to retrieve all drugs associated with a user
-
-        try {
-            const decodedToken = jwtService.verifyToken(token, userId);
-            console.log(decodedToken);
-        } catch (error) {
-            console.error(error.message);
+    return this.db.Drug.findByPk(id, {
+      include: [
+        {
+          model: this.db.User,
+          where: {
+            id: {[this.db.Op.eq]: this.db.sequelize.col('drugs.userId')},
+            authToken: {[this.db.Op.eq]: process.env.AUTH_TOKEN}
+          }
         }
+      ]
+    }).then(drug => {
+      if (!drug) {
+        return {error: 'Not authorized'};
+      }
+      return this.db.Drug.findByPk(id);
+    });
 
-        return this.db.Drug.findAll({
-            where: {
-                userId: { [this.db.Op.eq]: userId }
-            }
-        });
+  }
 
+  async getAllDrugs(userId, token) {
+    // Add logic to retrieve all drugs associated with a user
+
+    try {
+      const decodedToken = jwtService.verifyToken(token, userId);
+    } catch (error) {
+      console.error(error.message);
     }
+
+    return Drug.findAll();
+  }
 
 }
 

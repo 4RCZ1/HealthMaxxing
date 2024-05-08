@@ -2,12 +2,12 @@ const AddNewMedicine = () => {
   const sugmitAddMedicine = () => {
     const name = document.getElementById("name").value;
     const takeHours = document.getElementById("takeHours").value.split(",");
-    const dosage = document.getElementById("dosage").value;
+    const dosage = document.getElementById("dose").value;
     if (name.length < 1 || takeHours.length < 1 || dosage.length < 1) {
       alert("Wszystkie pola muszą być wypełnione");
       return;
     }
-    fetch("http://localhost:3001/medicines", {
+    fetch("http://localhost:3001/addDrugPrescription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -21,7 +21,7 @@ const AddNewMedicine = () => {
       alert("Dodano lek");
       document.getElementById("name").value = "";
       document.getElementById("takeHours").value = "";
-      document.getElementById("dosage").value = "";
+      document.getElementById("dose").value = "";
     }).catch(() => {
       alert("Wystąpił błąd");
     });
@@ -49,7 +49,7 @@ const AddNewMedicine = () => {
         </div>
         <div className="f-row" style={{justifyContent: "space-between"}}>
           <p>*Pola obowiązkowe</p>
-          <button>
+          <button onClick={sugmitAddMedicine}>
             Dodaj
           </button>
         </div>

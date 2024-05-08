@@ -39,7 +39,7 @@ const AddNew = () => {
             <span>Dodaj leki przez ereceptę</span>
           </ButtonContainer>
           <ButtonContainer>
-            <span>jd</span>
+            <span>Dodaj pomiar ze smartwatcha</span>
           </ButtonContainer>
         </div>
       </div>

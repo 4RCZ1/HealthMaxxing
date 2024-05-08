@@ -110,7 +110,7 @@ const AmogusImage = () => {
               fill="#445389"/>
         <Rect x={30} y={270} width={350} height={50} cornerRadius={40} fill="#BDC5E1" stroke="#BDC5E1"
               strokeWidth={10}/>
-        <Text text={closestPrescription['Drug.name']} x={60} y={285} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={20}
+        <Text text={closestPrescription ? closestPrescription['Drug.name'] : ""} x={60} y={285} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={20}
               fill="#445389"/>
         <Text text={closestHour + ":00"} x={290} y={280} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={30}
               fill="#445389"/>

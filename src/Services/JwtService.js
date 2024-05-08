@@ -1,27 +1,31 @@
-const jwt = require('jsonwebtoken');
-
+import jwt from 'jsonwebtoken';
 
 class JWTService {
-    constructor(secretKey) {
-        this.secretKey = secretKey;
-    }
+  constructor(secretKey) {
+    this.secretKey = secretKey;
+  }
 
-    generateToken(userId) {
-        return jwt.sign({ userId }, this.secretKey, { expiresIn: '1h' });
-    }
+  generateToken(userId) {
+    return jwt.sign({ userId }, this.secretKey, { expiresIn: '1h' });
+  }
 
-    verifyToken(token, expectedUserId) {
-        try {
-            const decodedToken = jwt.verify(token, this.secretKey);
-            if (decodedToken.userId !== expectedUserId) {
-                throw new Error('Invalid token');
-            }
-            return decodedToken;
-        } catch (error) {
-            throw new Error('Invalid token');
-        }
+  getUserId(token) {
+    const decodedToken = jwt.decode(token);
+    return decodedToken.userId;
+  }
+
+  verifyToken(token, expectedUserId) {
+    try {
+      const userId = this.getUserId(token);
+      if (userId !== expectedUserId) {
+        throw new Error('Invalid token');
+      }
+      return userId;
+    } catch (error) {
+      throw new Error('Invalid token');
     }
+  }
 }
 
 
-module.exports = JWTService;
+export default JWTService;

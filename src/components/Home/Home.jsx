@@ -5,7 +5,7 @@ import {Circle, Image, Layer, Rect, Stage, Text} from "react-konva";
 
 const AmogusImage = () => {
   const [imgNumber, setImgNumber] = useState(0);
-  const [communicatNumber] = useState(3);
+  const [communicatNumber, setCommunicatNumber] = useState(0);
   const [closestPrescription, setClosestPrescription] = useState({});
   const [closestHour, setClosestHour] = useState({});
 
@@ -34,10 +34,7 @@ const AmogusImage = () => {
 
   const [mainPosition, setMainPosition] = useState({x: 0, y: 540});
   const [hatPosition, setHatPosition] = useState(imgNumber === 1 ? {x: 10, y: 540} : {x: 0, y: 540});
-  const [communicatPosition, setCommunicatPosition] = useState(communicatNumber == 1 || communicatNumber == 2 ? {
-    x: 150,
-    y: 490
-  } : {x: 110, y: 490});
+  const [communicatPosition, setCommunicatPosition] = useState((communicatNumber === 1 || communicatNumber === 2) ? { x: 150, y: 490 } : {x: 120, y: 520});
   const handleClick = () => {
     setMainPosition((prevPosition) => ({
       ...prevPosition,
@@ -74,6 +71,10 @@ const AmogusImage = () => {
 
   const cycleHat = () => {
     setImgNumber((prevNumber) => (prevNumber + 1) % 3);
+  }
+
+  const cycleText = () => {
+    setCommunicatNumber((prevNumber) => (prevNumber + 1) % 4);
   }
 
   return (
@@ -124,7 +125,7 @@ const AmogusImage = () => {
 
       <Layer>
         <Image image={clothes} x={0} y={760} onClick={cycleHat}/>
-        <Image image={shop} x={350} y={760} onClick={handleClick}/>
+        <Image image={shop} x={350} y={760} onClick={cycleText}/>
       </Layer>
 
 

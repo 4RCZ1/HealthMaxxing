@@ -1,5 +1,5 @@
-import {User} from '../database/models';
-import JWTService from "./JwtService";
+const {User} = require('../database/models');
+const JWTService = require("./JwtService");
 
 const jwtService = new JWTService('100pk4');
 

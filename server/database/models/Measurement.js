@@ -1,5 +1,5 @@
-import { Model, DataTypes } from 'sequelize';
-import sequelize from '../sequelize.js';
+const {Model, DataTypes} = require('sequelize');
+const sequelize = require('../sequelize.js');
 
 class Measurement extends Model {}
 
@@ -25,4 +25,4 @@ Measurement.init({
   modelName: 'Measurement'
 });
 
-export default Measurement;
+module.exports = Measurement;

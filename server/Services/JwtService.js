@@ -1,5 +1,4 @@
-import jwt from 'jsonwebtoken';
-
+const jwt = require('jsonwebtoken');
 class JWTService {
   constructor(secretKey) {
     this.secretKey = secretKey;
@@ -28,4 +27,4 @@ class JWTService {
 }
 
 
-export default JWTService;
+module.exports = JWTService;

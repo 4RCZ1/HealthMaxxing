@@ -1,12 +1,12 @@
-import User from './User.js';
-import Drug from './Drug.js';
-import DrugPrescription from './DrugPrescription.js';
-import DrugTake from './DrugTake.js';
-import Measurement from "./Measurement";
-import MeasurementTake from "./MeasurementTake";
-import MeasurementPrescription from "./MeasurementPrescription";
+const User = require('./User');
+const Drug = require('./Drug');
+const DrugPrescription = require('./DrugPrescription');
+const DrugTake = require('./DrugTake');
+const Measurement = require("./Measurement");
+const MeasurementTake = require("./MeasurementTake");
+const MeasurementPrescription = require("./MeasurementPrescription");
 
-export {
+module.exports = {
   User,
   Drug,
   DrugPrescription,

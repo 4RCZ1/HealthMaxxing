@@ -1,10 +1,11 @@
-import sequelize from '../database/sequelize';
-import {Sequelize} from "sequelize";
-import JWTService from './JwtService';
-import Measurement from '../database/models/Measurement';
-import User from '../database/models/User';
-import MeasurementPrescription from "../database/models/MeasurementPrescription";
-import MeasurementTake from "../database/models/MeasurementTake";
+const {Sequelize} = require('sequelize');
+const sequelize = require('../database/sequelize');
+const JWTService = require('./JwtService');
+const Measurement = require('../database/models/Measurement');
+const User = require('../database/models/User');
+const MeasurementPrescription = require("../database/models/MeasurementPrescription");
+const MeasurementTake = require("../database/models/MeasurementTake");
+
 
 const jwtService = new JWTService('100pa');
 
@@ -177,4 +178,4 @@ class MeasurementsService {
 }
 
 
-export default MeasurementsService;
+module.exports = MeasurementsService;

@@ -1,5 +1,5 @@
-import * as pg from 'pg';
-import { Sequelize } from 'sequelize';
+const pg = require('pg');
+const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize('postgres://postgres.sjhuqckzmnpsxrbkbqcn:R5bcHbooPewNogXE@aws-0-eu-central-1.pooler.supabase.com:6543/postgres', {
   dialect: 'postgres',
@@ -18,4 +18,4 @@ sequelize.sync({ force: false})
   .then(() => console.log('All models were synchronized successfully.'))
   .catch(error => console.error('An error occurred while synchronizing models:', error));
 
-export default sequelize;
+module.exports = sequelize;

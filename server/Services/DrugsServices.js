@@ -1,20 +1,21 @@
-import sequelize from '../database/sequelize';
-import {Sequelize} from "sequelize";
-import JWTService from './JwtService';
-import Drug from '../database/models/Drug';
-import User from '../database/models/User';
-import DrugPrescription from "../database/models/DrugPrescription";
-import DrugTake from "../database/models/DrugTake";
-import 'react-app-polyfill/ie9';
-import 'react-app-polyfill/ie11';
+const JWTService = require('./JwtService');
+const {Drug} = require('../database/models/Drug');
+const {User} = require('../database/models/User');
+const {DrugPrescription} = require('../database/models/DrugPrescription');
+const {DrugTake} = require('../database/models/DrugTake');
 
-const jwtService = new JWTService('100pa');
+
 
 const validator = (target, requiredProperties) => {
   return requiredProperties.filter(property => !target[property]);
 }
 
 class DrugsService {
+
+  constructor() {
+    this.jwtService = new JWTService('100pa');
+
+  }
   async addDrugPrescription(drug, token) {
     if (validator(drug, ['name', 'frequency', 'dose', 'notes']).length > 0) {
       return {
@@ -44,7 +45,7 @@ class DrugsService {
       }))[0]?.id;
     }
 
-    const userId = jwtService.getUserId(token);
+    const userId = this.jwtService.getUserId(token);
     if (drug.userId && drug.userId !== userId) {
       if (drug.prescriptorId && drug.prescriptorId !== userId) {
         return {
@@ -65,7 +66,7 @@ class DrugsService {
   }
 
   async takeDrug(prescriptionId, token) {
-    const userId = jwtService.getUserId(token);
+    const userId = this.jwtService.getUserId(token);
     const drugPrescription = await DrugPrescription.findByPk(prescriptionId);
     if (!drugPrescription) {
       return {
@@ -87,7 +88,7 @@ class DrugsService {
   }
 
   async getDrugTakeHistory(token) {
-    const userId = jwtService.getUserId(token);
+    const userId = this.jwtService.getUserId(token);
     return DrugTake.findAll({
       where: {
         userId: userId
@@ -108,7 +109,7 @@ class DrugsService {
   }
 
   async getUserPrescriptions(token) {
-    const userId = jwtService.getUserId(token);
+    const userId = this.jwtService.getUserId(token);
     return DrugPrescription.findAll({
       where: {
         userId: userId
@@ -144,7 +145,7 @@ class DrugsService {
     const drug = this.db.Drug.findByPk(id);
     try {
       const expectedUserId = drug.userId
-      const decodedToken = jwtService.verifyToken(token, expectedUserId);
+      const decodedToken = this.jwtService.verifyToken(token, expectedUserId);
     } catch (error) {
       console.error(error.message);
     }
@@ -172,7 +173,7 @@ class DrugsService {
     // Add logic to retrieve all drugs associated with a user
 
     try {
-      const decodedToken = jwtService.verifyToken(token, userId);
+      const decodedToken = this.jwtService.verifyToken(token, userId);
     } catch (error) {
       console.error(error.message);
     }
@@ -183,4 +184,4 @@ class DrugsService {
 }
 
 
-export default DrugsService;
+module.exports = DrugsService;

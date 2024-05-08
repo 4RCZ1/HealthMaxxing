@@ -1,7 +1,7 @@
-import {Model, DataTypes} from 'sequelize';
-import sequelize from '../sequelize.js';
-import User from './User.js';
-import MeasurementPrescription from './MeasurementPrescription';
+const {Model, DataTypes} = require('sequelize');
+const sequelize = require('../sequelize.js');
+const User = require('./User.js');
+const MeasurementPrescription = require('./MeasurementPrescription');
 
 class MeasurementTake extends Model {
 }
@@ -39,4 +39,4 @@ MeasurementTake.init({
 MeasurementTake.belongsTo(MeasurementPrescription, {foreignKey: 'measurementId'});
 MeasurementPrescription.belongsTo(User, {foreignKey: 'userId'});
 
-export default MeasurementTake;
+module.exports = MeasurementTake;

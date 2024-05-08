@@ -1,7 +1,7 @@
-import { Model, DataTypes } from 'sequelize';
-import sequelize from '../sequelize.js';
-import User from './User.js';
-import Drug from './Drug.js';
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../sequelize.js');
+const User = require('./User.js');
+const Drug = require('./Drug.js');
 
 class DrugPrescription extends Model {}
 
@@ -47,4 +47,4 @@ DrugPrescription.belongsTo(User, { as: 'User', foreignKey: 'userId' });
 DrugPrescription.belongsTo(User, { as: 'Prescriptor', foreignKey: 'prescriptorId' });
 DrugPrescription.belongsTo(Drug, { foreignKey: 'drugId' });
 
-export default DrugPrescription;
+module.exports = DrugPrescription;

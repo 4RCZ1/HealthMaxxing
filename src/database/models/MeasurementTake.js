@@ -1,28 +1,42 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../sequelize';
-import User from './User';
-import Measurement from './Measurement';
+import {Model, DataTypes} from 'sequelize';
+import sequelize from '../sequelize.js';
+import User from './User.js';
+import MeasurementPrescription from './MeasurementPrescription';
 
-const MeasurementTake = sequelize.define('MeasurementTake', {
-  id: {
+class MeasurementTake extends Model {
+}
+
+MeasurementTake.init({
+  measurementPrescriptionId: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
+    references: {
+      model: MeasurementPrescription,
+      key: 'id'
+    }
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  },
+  timeTaken: {
+    type: DataTypes.DATE,
+    allowNull: false
   },
   value: {
     type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  takenAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
+    allowNull: false
+  }
 }, {
-  timestamps: true,
+  sequelize,
+  modelName: 'MeasurementTake'
 });
 
-MeasurementTake.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-MeasurementTake.belongsTo(Measurement, { foreignKey: 'measurementId', as: 'measurement' });
+MeasurementTake.belongsTo(MeasurementPrescription, {foreignKey: 'measurementId'});
+MeasurementPrescription.belongsTo(User, {foreignKey: 'userId'});
 
 export default MeasurementTake;

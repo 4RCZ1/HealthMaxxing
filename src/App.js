@@ -3,13 +3,16 @@ import { Text, Stage, Layer, Image, Circle, Rect } from 'react-konva';
 import useImage from 'use-image';
 
 const AmogusImage = () => {
-  const [imgNumber] = useState(2);
+  const [imgNumber, setImgNumber] = useState(2);
   const [communicatNumber] = useState(3);
 
   const [image] = useImage(require('./pet.png'));
   const [hat] = useImage(imgNumber === 1 ? require('./hat1.png') : require('./hat2.png'));
   const [communicat] = useImage(communicatNumber === 1 ? require('./communicat1.png') : communicatNumber === 2 ? require('./communicat2.png') : require('./communicat3.png'));
   const [clothes] = useImage(require('./Clothes.png'));
+  const [shop] = useImage(require('./shop.png'));
+  const [streak] = useImage(require('./Streak.png'));
+  const [alarm] = useImage(require('./Alarm.png'));
 
   const [mainPosition, setMainPosition] = useState({ x: 0, y: 500 });
   const [hatPosition, setHatPosition] = useState( imgNumber === 1 ? { x: 10, y: 500 } : { x: 0, y: 500 });
@@ -48,6 +51,10 @@ const AmogusImage = () => {
     }, 400); // Adjust the duration of the movement animation
   };
 
+  const cycleHat = () => {
+    setImgNumber((prevNumber) => (prevNumber + 1) % 3);
+  }
+
   return (
     <Stage width={412} height={800} style={{ backgroundColor: '#DBE3FF' }} >
       <Layer>
@@ -55,17 +62,19 @@ const AmogusImage = () => {
         <Circle fill="white" stroke="white" strokeWidth={30} x={226} y={100} radius={50} scaleY={0.5} />
         <Circle fill="white" stroke="white" strokeWidth={30} x={206} y={80} radius={50} scaleY={0.5} />
 
-        <Circle fill="white" stroke="white" strokeWidth={30} x={86} y={300} radius={50} scaleY={0.5} />
-        <Circle fill="white" stroke="white" strokeWidth={30} x={166} y={300} radius={50} scaleY={0.5} />
-        <Circle fill="white" stroke="white" strokeWidth={30} x={126} y={280} radius={50} scaleY={0.5} />
+        <Circle fill="white" stroke="white" strokeWidth={30} x={86} y={390} radius={50} scaleY={0.5} />
+        <Circle fill="white" stroke="white" strokeWidth={30} x={166} y={390} radius={50} scaleY={0.5} />
+        <Circle fill="white" stroke="white" strokeWidth={30} x={126} y={370} radius={50} scaleY={0.5} />
 
         <Circle fill="white" stroke="white" strokeWidth={30} x={246} y={500} radius={50} scaleY={0.5} />
         <Circle fill="white" stroke="white" strokeWidth={30} x={326} y={500} radius={50} scaleY={0.5} />
         <Circle fill="white" stroke="white" strokeWidth={30} x={286} y={480} radius={50} scaleY={0.5} />
 
-        <Rect x={0} y={680} width={412} height={120} fill="green" />
-        <Image image={clothes} x={0} y={730} onClick={handleClick} />
+        <Rect x={0} y={710} width={412} height={120} fill="green" />
+
+
       </Layer>
+
       <Layer>
         <Image image={image} {...mainPosition} onClick={handleClick} />
         {imgNumber !== 0 ? <Image image={hat} {...hatPosition} onClick={handleClick} /> : null}
@@ -73,9 +82,19 @@ const AmogusImage = () => {
       </Layer>
 
       <Layer>
-        <Text text="Witaj Szefie!" x={20} y={50} fontFamily="'Inter', sans-serif" fontSize={48} fill="#445389" />
-        <Text text="Kolejne dni gdy dbasz o swoje zdrowie:" x={20} y={100} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={30} fill="#445389" />
+        <Text text="Witaj Szefie!" x={20} y={20} fontFamily="'Inter', sans-serif" fontSize={48} fill="#445389" />
+        <Text text="Kolejne dni gdy dbasz o swoje zdrowie:" x={20} y={70} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={30} fill="#445389" />
+        <Rect x={100} y={150} width={212} height={60} cornerRadius={20} fill="#BDC5E1" stroke="#BDC5E1" strokeWidth={10} />
+        <Image image={streak} x={80} y={130}  />
+        <Text text="21" x={180} y={150} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={62} fill="#445389" />
+        <Text text="Następny lek:" x={20} y={230} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={20} fill="#445389" />
+        <Rect x={30} y={270} width={350} height={50} cornerRadius={40} fill="#BDC5E1" stroke="#BDC5E1" strokeWidth={10} />
+        <Text text="Neurovit" x={60} y={285} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={20} fill="#445389" />
+        <Text text="12:00" x={290} y={280} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={30} fill="#445389" />
 
+        <Image image={alarm} x={240} y={270} onClick={handleClick} />
+        <Image image={clothes} x={0} y={725} onClick={cycleHat} />
+        <Image image={shop} x={350} y={725} onClick={handleClick} />
       </Layer>
     </Stage>
   );

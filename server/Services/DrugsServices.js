@@ -1,8 +1,8 @@
 const JWTService = require('./JwtService');
-const {Drug} = require('../database/models/Drug');
-const {User} = require('../database/models/User');
-const {DrugPrescription} = require('../database/models/DrugPrescription');
-const {DrugTake} = require('../database/models/DrugTake');
+const Drug = require('../database/models/Drug');
+const User = require('../database/models/User');
+const DrugPrescription = require('../database/models/DrugPrescription');
+const DrugTake = require('../database/models/DrugTake');
 
 
 
@@ -60,7 +60,7 @@ class DrugsService {
       drugId: drugId,
       prescriptorId: drug.prescriptorId,
       frequency: drug.frequency,
-      takeHour: drug.takeHour
+      takeHours: drug.takeHours
     });
     return {drugId};
   }
@@ -131,13 +131,18 @@ class DrugsService {
   async getClosestPrescription(token) {
     const allUserPrescriptions = await this.getUserPrescriptions(token);
     const currentHour = new Date().getHours();
-    const closestPrescription = allUserPrescriptions.reduce((closestPrescription, prescription) => {
-      if (!closestPrescription) {
-        return prescription;
-      }
-      return prescription.takeHour - currentHour < closestPrescription.takeHour - currentHour ? prescription : closestPrescription;
-    }, null);
-    return closestPrescription;
+    
+    let closestPrescription 
+    let closestHour = 100;
+    allUserPrescriptions.forEach(prescription => {
+      prescription.takeHours.hours.forEach(hour => {
+        closestPrescription = hour - currentHour < closestHour - currentHour ? prescription : closestPrescription;
+        closestHour = hour - currentHour < closestHour - currentHour ? hour : closestHour;
+      });
+    })
+
+
+    return {closestPrescription, closestHour};
   }
 
   async getDrug(id, token) {

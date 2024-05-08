@@ -20,6 +20,13 @@ app.get('/getUserPrescriptions', async (req, res) => {
 });
 
 
+app.get('/addDrugPrescription', async (req, res) => {
+    const token = req.headers.authorization;
+    const drug = req.body;
+    const userPrescriptions = await DrugsServices.addDrugPrescription(drug, token);
+    res.send(userPrescriptions);
+});
+
 app.post('/generateToken', async (req, res) => {
   const token = await JWTServices.generateToken(1);
   res.send({ token });

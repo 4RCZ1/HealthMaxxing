@@ -7,13 +7,15 @@ const AmogusImage = () => {
   const [imgNumber, setImgNumber] = useState(0);
   const [communicatNumber] = useState(3);
   const [closestPrescription, setClosestPrescription] = useState({});
+  const [closestHour, setClosestHour] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await axios.get('http://localhost:3001/getClosestPrescription');
         console.log(result.data)
-        setClosestPrescription(result.data);
+        setClosestPrescription(result.data.closestPrescription);
+        setClosestHour(result.data.closestHour);
       } catch (e) {
         console.error(e);
       }
@@ -109,7 +111,7 @@ const AmogusImage = () => {
               strokeWidth={10}/>
         <Text text={closestPrescription['Drug.name']} x={60} y={285} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={20}
               fill="#445389"/>
-        <Text text={closestPrescription.takeHour + ":00"} x={290} y={280} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={30}
+        <Text text={closestHour + ":00"} x={290} y={280} width={300} wrap="word" fontFamily="'Inter', sans-serif" fontSize={30}
               fill="#445389"/>
         <Image image={alarm} x={240} y={270} onClick={handleClick}/>
       </Layer>

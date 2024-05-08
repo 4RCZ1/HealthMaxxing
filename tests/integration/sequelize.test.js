@@ -9,7 +9,7 @@ describe('Sequelize', () => {
     expect(sequelize).toBeDefined();
   });
   it.skip('should synchronize all models', async () => {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
     expect(sequelize).toBeDefined();
   });
   it('should create new drug', async () => {

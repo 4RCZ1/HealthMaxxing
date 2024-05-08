@@ -56,7 +56,8 @@ class DrugsService {
       userId: drug.userId || userId,
       drugId: drugId,
       prescriptorId: drug.prescriptorId,
-      frequency: drug.frequency
+      frequency: drug.frequency,
+      takeHour: drug.takeHour
     });
     return {drugId};
   }
@@ -122,6 +123,18 @@ class DrugsService {
       ],
       raw: true
     });
+  }
+
+  async getClosestPrescription(token) {
+    const allUserPrescriptions = await this.getUserPrescriptions(token);
+    const currentHour = new Date().getHours();
+    const closestPrescription = allUserPrescriptions.reduce((closestPrescription, prescription) => {
+      if (!closestPrescription) {
+        return prescription;
+      }
+      return prescription.takeHour - currentHour < closestPrescription.takeHour - currentHour ? prescription : closestPrescription;
+    }, null);
+    return closestPrescription;
   }
 
   async getDrug(id, token) {

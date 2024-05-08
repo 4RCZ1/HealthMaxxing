@@ -36,13 +36,28 @@ export default class Pet {
     return this.moodLevel;
   }
 
+  getSprite() {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${this.species}.png`;
+  }
+
   updateMoodLevel(moodLevel) {
     
   }
 
+  click(){
+    
+  }
 
+  wear(){
+    
+  }
 
-
+  draw(){
+    return `<div class="pet">
+      <img src=${this.getSprite()} alt="pet" />
+      <p>${this.name}</p>
+    </div>`;
+  }
 
   toString() {
     return `Name: ${this.name}\nAge: ${this.age}\nSpecies: ${this.species}\nOwner: ${this.owner}\nMedical History: ${this.medicalHistory.join(', ')}`;

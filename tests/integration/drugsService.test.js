@@ -60,7 +60,7 @@ describe("DrugsServices", () => {
     const token = JWTService.generateToken(doctorId);
     const drugsServices = new DrugsServices();
     const response = await drugsServices.addDrugPrescription(drug, token);
-
+    console.log('userId', userId)
     expect(response.error).toBeUndefined();
 
     const drugPrescription = await DrugPrescription.findAll({

@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
@@ -12,10 +13,12 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
+app.use(cors());
 
-app.get('/getUserPrescriptions', async (req, res) => {
-  const token = req.headers.authorization;
-  const userPrescriptions = await DrugsServices.getUserPrescriptions(token);
+
+app.get('/getClosestPrescription', async (req, res) => {
+  const token = await JWTServices.generateToken(1);
+  const userPrescriptions = await DrugsServices.getClosestPrescription(token);
   res.send(userPrescriptions);
 });
 

@@ -10,9 +10,13 @@ const AmogusImage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('http://localhost:3001/getClosestPrescription');
-      console.log(result.data)
-      setClosestPrescription(result.data);
+      try {
+        const result = await axios.get('http://localhost:3001/getClosestPrescription');
+        console.log(result.data)
+        setClosestPrescription(result.data);
+      } catch (e) {
+        console.error(e);
+      }
     };
 
     fetchData();
@@ -71,6 +75,7 @@ const AmogusImage = () => {
   }
 
   return (
+    <div style={{margin:"-0.8rem -1.8rem"}}>
     <Stage width={412} height={835} style={{backgroundColor: '#DBE3FF'}}>
       <Layer>
         <Circle fill="white" stroke="white" strokeWidth={30} x={166} y={100} radius={50} scaleY={0.5}/>
@@ -122,6 +127,7 @@ const AmogusImage = () => {
 
 
     </Stage>
+    </div>
   );
 };
 

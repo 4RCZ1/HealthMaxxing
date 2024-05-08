@@ -39,6 +39,14 @@ body {
   flex-direction: column;
 }
 
+input{
+  padding: 1rem;
+  border-radius: 31px;
+  border: 1px solid #445389;
+  margin: 0.5rem 0;
+  background:transparent;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
   monospace;

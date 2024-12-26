@@ -3,14 +3,16 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["DB_PASSWORD"]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
     "dev": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "env": ["DB_PASSWORD"]
     },
     "lint": {
       "dependsOn": ["^lint"]
